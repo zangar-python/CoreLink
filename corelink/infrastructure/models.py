@@ -8,3 +8,12 @@ class Activity(models.Model):
     
     def __str__(self):
         return f"User : {self.user.username} activity : {self.activity}"
+
+class Wiki(models.Model):
+    title = models.CharField(max_length=200)
+    text = models.TextField()
+    author = models.ForeignKey(User,models.CASCADE,related_name="my_wiki")
+    likes = models.ManyToManyField(User,related_name="likes")
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    

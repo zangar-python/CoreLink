@@ -24,15 +24,25 @@ class Admin_class_func:
         user_email = []
         user_active = []
         user_last = []
+        users_ = []
         for user_ in users:
             user_name.append(user_.username)
             user_password.append(user_.password)
             user_email.append(user_.email)
             user_id.append(user_.id)
-            
-            
             user_active.append(user_.activity.active)
             user_last.append(user_.activity.last_active.date())    
+            user_data = {
+                "username":user_.username,
+                "password":user_.password,
+                "id":user_.id,
+                "email":user_.email,
+                "activity":{
+                    "active":user_.activity.active,
+                    "last_active":user_.activity.last_active.date()
+                }
+            }
+            users_.append(user_data)
         
         df_data = {
             "username":user_name,
@@ -54,10 +64,6 @@ class Admin_class_func:
         df['level'] = np.select(conditions,choices,default="unknown")
         df.sort_values(by="active",ascending=False)
         print(df)
-        users_ = []
-        for i in range(0,df["id"].count()):
-            users_.append(df.iloc[i])
-        print(users)
         
         return self.RESULT({
             "users":users_,
