@@ -1,8 +1,8 @@
-from corelink.infrastructure.db.models.activity import Activity
+from infrastructure.models import Activity
 from rest_framework.serializers import ModelSerializer
 
 class ActivitySerializer(ModelSerializer):
     class Meta:
         model=Activity
-        fields= ["username","email","id"]
+        fields= "__all__"
         

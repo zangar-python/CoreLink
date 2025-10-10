@@ -23,6 +23,10 @@ class UserLoginViews(APIView):
         email = request.data.get("email")
         return Response(UserAuth_Log().user_login(password,email=email,username=username))
 class UserProfile(APIView):
-    def get(self,request:Request):
+    def post(self,request:Request):
         profile_service = User_Profile_Service()
+        
         return Response(profile_service.set_user_data(request))
+    def get(self,request:Request):
+        return Response(User_Profile_Service().get_user_profile(request.user))
+       

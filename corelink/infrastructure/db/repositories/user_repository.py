@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
-from rest_framework.authentication import authenticate
+from django.contrib.auth import authenticate
 from typing import Union
+from .activity_repo import ActivityRepository
 
 class UserRepository:
     def __init__(self):
@@ -11,15 +12,26 @@ class UserRepository:
             password=password,
             email=email    
         )
+        ActivityRepository(user).set_activity()
         return user
     
     def login(self,password:str,username:Union[str,None]=None,email:Union[str,None]=None) -> User:
-        if username is not None:
-            return authenticate(username=username,password=password)
-        elif email is not None:
-            return authenticate(email=email,password=password)
+        if username:
+            user = authenticate(username=username,password=password)
+            if user:
+                print(user)
+                ActivityRepository(user).set_activity()
+            return user
+        elif email:
+            user = authenticate(email=email,password=password)
+            if user:
+                print(user)
+                ActivityRepository(user).set_activity()
+            return user
         else:
+            print("err")
             return False
+        
     def get_user(self,id:Union[str,None]=None,username:Union[str,None]=None,email:Union[str,None]=None):
         if id is not None:
             return User.objects.get(id=id)

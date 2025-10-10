@@ -1,4 +1,5 @@
 from .views.user_views import UserLoginViews,UserRegisterViews,UserProfile
+from .views.admin_views import Get_users_list
 from django.urls import path,include
 
 user_views_urls = [
@@ -6,7 +7,11 @@ user_views_urls = [
     path("login/",UserLoginViews.as_view(),name="user-login"),
     path("",UserProfile.as_view(),name="User-profile")
 ]
+admin_views_urls = [
+    path("users/",Get_users_list.as_view(),name="users-list")
+]
 
 api_urls = [
-    path("",include(user_views_urls))
+    path("",include(user_views_urls)),
+    path("admin/",include(admin_views_urls))
 ]

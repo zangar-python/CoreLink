@@ -1,6 +1,7 @@
 from infrastructure.db.repositories.user_repository import UserRepository
 from infrastructure.db.repositories.token_repository import TokenRepository
 from api.serializers.user_serializer import UserSerializer,User
+from infrastructure.db.repositories.super_user_repo import SuperUserRepository
 
 from typing import Union
 
@@ -43,6 +44,7 @@ class UserAuth_Log:
             )
         user_repos = UserRepository()
         user = user_repos.login(password=password,username=username,email=email)
+        print(user)
         if not user:
             return self.RESULT(
                 {'err':"пользователи с такими данными не существует"},True
@@ -62,9 +64,4 @@ class UserAuth_Log:
             )
         user = user_repos.get_user(id=id,username=username,email=email)
         return self.RESULT({"user":UserSerializer(user).data})
-    def get_users(self,user:User):
-        user_repo = UserRepository()
-        if not user_repo.user_is_superuser(user):
-            return self.RESULT({"err":"Вам не доступна эта команда"},True)
-        users = user_repo.get_users()
-        return self.RESULT({"users":UserSerializer(users,many=True).data})
+    
