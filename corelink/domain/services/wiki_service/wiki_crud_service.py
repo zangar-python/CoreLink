@@ -2,6 +2,8 @@ from infrastructure.db.wiki_repositories.crud import WikiRepository
 from ..user_auth import UserAuth_Log
 from api.serializers.wiki_serializer import WikiSerializer
 from infrastructure.db.repositories.super_user_repo import SuperUserRepository
+from django.db.models import Count
+from infrastructure.tasks.task import Top_Wikis
 
 from typing import Union
 
@@ -76,4 +78,16 @@ class WikiService(UserAuth_Log):
         return self.RESULT({
             "wiki":self.serializer(wiki).data,
             "deleted":True
+        })
+    def top_wikis_in_a_day(self):
+        wikis = self.wiki_repo.get_all_wikis()
+        new_wiki = wikis.order_by("-created_at").values_list("id")[:30]
+        top_wiki = self.wiki_repo.get_wikis_by_ids(new_wiki).annotate(likes_count=Count("likes")).order_by("-likes_count")
+        return top_wiki
+    
+    def top_wiki_get(self):
+        ids = Top_Wikis().get()
+        wikis = self.wiki_repo.get_wikis_by_ids(ids)
+        return self.RESULT({
+            "top_wikis":self.serializer(wikis,many=True).data
         })

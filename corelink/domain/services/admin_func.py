@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
 from infrastructure.db.repositories.super_user_repo import SuperUserRepository
 from infrastructure.db.repositories.user_repository import UserRepository
+from infrastructure.tasks.task import active_users_get_delete,top_wiki_in_a_day
 
 import pandas as pd
 import numpy as np
@@ -78,3 +79,15 @@ class Admin_class_func:
         user_to_del = user_repo.get_user(id=id)
         super_user_repo.delete_user(user_to_del)
         return self.RESULT({"delete":True,"user_id":user_to_del.id})
+    def set_top_wikis(self,user:User):
+        super_user_repo = SuperUserRepository(user)
+        if not super_user_repo.user_is_superuser():
+            return self.RESULT("Вам запрещено текущая команда",True)
+        top_wiki_in_a_day.delay()
+        return self.RESULT("Запрос принят")
+    def delete_all_active(self,user:User):
+        super_user_repo = SuperUserRepository(user)
+        if not super_user_repo.user_is_superuser():
+            return self.RESULT("Вам запрещено текущая команда",True)
+        active_users_get_delete.delay()
+        return self.RESULT("Ваш запрос принят")

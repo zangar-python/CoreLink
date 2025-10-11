@@ -46,3 +46,6 @@ class WikiRepository:
     def delete_wiki(self,wiki:Wiki):
         wiki.delete()
         return
+    
+    def get_wikis_by_ids(self,ids):
+        return Wiki.objects.filter(id__in=ids)
