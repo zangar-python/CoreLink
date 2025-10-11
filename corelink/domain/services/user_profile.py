@@ -2,7 +2,7 @@
 from ..entitys.Activity_User import ActivityEntity
 from rest_framework.request import Request
 from api.serializers.user_serializer import UserSerializer
-from api.serializers.activity_serializers import ActivitySerializer,Activity
+from api.serializers.activity_serializers import Activity
 from django.contrib.auth.models import User
 
 class User_Profile_Service:

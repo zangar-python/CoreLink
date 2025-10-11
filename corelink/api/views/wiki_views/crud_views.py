@@ -2,6 +2,7 @@ from rest_framework.views import APIView
 from rest_framework.request import Request
 from rest_framework.response import Response
 from domain.services.wiki_service.wiki_crud_service import WikiService
+from domain.services.wiki_service.wiki_create_celery import start_celery_worker_CREATE_WIKI
 
 class Wiki_CRUD_Views(APIView):
     def post(self,request:Request):
@@ -10,9 +11,7 @@ class Wiki_CRUD_Views(APIView):
         
         if not text or not title:
             return Response("Пополните поля {text,title}",status=401) 
-        return Response(WikiService(user=request.user).set_wiki(
-            title=title,text=text
-        ))
+        return Response(start_celery_worker_CREATE_WIKI(request.user,title,text))
     def get(self,request:Request):
         res = WikiService(request.user).get_all_wiki()
         return Response(res)

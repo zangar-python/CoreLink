@@ -12,3 +12,4 @@ celery_app = celery.Celery(
 
 # celery_app.autodiscover_tasks(['infrastructure.tasks'])
 from .tasks.task import hello_world
+from .tasks.task import create_wiki
