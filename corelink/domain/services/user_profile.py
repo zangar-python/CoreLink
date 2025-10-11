@@ -30,11 +30,13 @@ class User_Profile_Service:
         else:
             level = "high"
         
+        wiki_count = user.my_wiki.count()
         return {
             "username":user.username,
             "email":user.email,
             "id":user.id,
             "level_active":level,
             "activity":activity.active,
-            "last_active":activity.last_active.date()
+            "last_active":activity.last_active.date(),
+            "wiki_count":wiki_count
         }

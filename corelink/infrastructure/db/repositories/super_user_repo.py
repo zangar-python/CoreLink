@@ -1,12 +1,13 @@
 # from rest_framework.request import Request
 from django.contrib.auth.models import User
 from django.db.models.manager import BaseManager
+from typing import Union
 
 class SuperUserRepository:
     def __init__(self,user:User):
         self.user = user
         pass
-    def user_is_superuser(self,user:User=None) -> bool:
+    def user_is_superuser(self,user:Union[User,None]=None) -> bool:
         if user is not None:
             return user.is_superuser
         return self.user.is_superuser
