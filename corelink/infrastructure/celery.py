@@ -25,4 +25,4 @@ celery_app.conf.beat_schedules = {
 
 
 from .tasks.task import create_wiki,active_users_get_delete,top_wiki_in_a_day
-
+from .tasks.req_to_change_async import set_request_to_change,delete_request_change,accept_request_to_change

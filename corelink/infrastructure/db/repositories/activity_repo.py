@@ -11,7 +11,7 @@ class ActivityRepository:
         return True
     def get_activity(self):
         return self.user.activity
-    def update(self,ball:Union[int,None]):
+    def update(self,ball:Union[int,None]=None):
         if ball:
             self.user.activity.active = self.user.activity.active + ball
         self.user.activity.save()

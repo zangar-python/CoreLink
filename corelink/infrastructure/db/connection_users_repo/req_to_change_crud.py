@@ -7,25 +7,25 @@ class Req_To_Change_Repo:
     def __init__(self,user:User):
         self.user = user
         pass
-    def set_request(self,wiki:Wiki,title:str,text:str):
-        Request_To_Change_Wiki.objects.create(
+    def set_request(self,wiki:Wiki,title:Union[str,None]=None,text:Union[str,None]=None):
+        req = Request_To_Change_Wiki.objects.create(
             wiki=wiki,
             title=title,
             text=text,
             to_author=wiki.author,
             from_user=self.user   
         )
-        return
+        return req
     
     # GET REQUESTS LIST
-    def get_requests_list(self,wiki:Union[Wiki,None]) -> BaseManager[Request_To_Change_Wiki]:
+    def get_requests_list(self,wiki:Union[Wiki,None]=None) -> BaseManager[Request_To_Change_Wiki]:
         if wiki:
             requests = self.user.requests_to_change.filter(wiki=wiki).order_by("-created_at")
         else:
             requests = self.user.requests_to_change.all().order_by("-created_at")
         return requests
     
-    def get_my_requests_list(self,wiki:Union[Wiki,None]) -> BaseManager[Request_To_Change_Wiki]:
+    def get_my_requests_list(self,wiki:Union[Wiki,None]=None) -> BaseManager[Request_To_Change_Wiki]:
         if wiki:
             my_requests = self.user.my_requests_to_change.filter(wiki=wiki).order_by("-created_at")
         else:
@@ -56,13 +56,13 @@ class Req_To_Change_Repo:
     def get_request(self,id) -> Union[Request_To_Change_Wiki,None]:
         if not self.request_exists(id):
             return
-        return self.user.requests_to_change(id)
+        return self.user.requests_to_change.get(id=id)
     
-    #   CLEAR ALL MESSAGES
-    def clear_all_messages(self):
+    #   CLEAR ALL REQUESTS
+    def clear_all_requests(self):
         self.user.requests_to_change.all().delete()
         return
-    def clear_all_my_messages(self):
+    def clear_all_my_requests(self):
         self.user.my_requests_to_change.all().delete()
         return
         
