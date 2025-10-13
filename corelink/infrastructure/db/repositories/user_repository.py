@@ -42,13 +42,13 @@ class UserRepository:
         return None
     def user_exists(self,id:Union[str,None]=None,username:Union[str,None]=None,email:Union[str,None]=None) -> bool:
         result = False
-        if id is not None:
+        if id:
             if User.objects.filter(id=id).exists():
                 result = True
-        if username is not None:
+        elif username:
             if User.objects.filter(username=username).exists():
                 result = True
-        if email is not None:
+        elif email:
             if User.objects.filter(email=email).exists():
                 result = True
         else:

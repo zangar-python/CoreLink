@@ -14,7 +14,8 @@ class RequestToChangeWiki:
         print("Обьект создан")
         pass
     def set_user(self):
-        if not User.objects.filter(id=self.user_id).exists():
+        # if not User.objects.filter(id=self.user_id).exists():
+        if not UserRepository().user_exists(self.user_id):
             return False
         self.user =  self.user_repo.get_user(id=self.user_id)
         print("User is get")

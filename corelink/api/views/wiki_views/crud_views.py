@@ -49,6 +49,6 @@ class Accept_for_req_changes(APIView):
         return Response(res)
 class get_all_req_changes(APIView):
     def get(self,request:Request):
-        res = Req_To_Change_Repo(request.user).get_requests_list(None)
+        res = Req_To_Change_Repo(request.user).get_requests_list()
         return Response(Reques_to_change_serializer(res,many=True).data)
 
