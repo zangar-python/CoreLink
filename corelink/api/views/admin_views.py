@@ -20,3 +20,7 @@ class Delete_all_active(APIView):
     permission_classes = [IsAdminUser]
     def delete(self,request:Request):
         return Response(Admin_class_func().delete_all_active(request.user))
+class Wiki_count_analys(APIView):
+    permission_classes = [IsAdminUser]
+    def get(self,request:Request):
+        return Response(Admin_class_func().wiki_analys_users(request.user))

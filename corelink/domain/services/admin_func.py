@@ -2,6 +2,8 @@ from django.contrib.auth.models import User
 from infrastructure.db.repositories.super_user_repo import SuperUserRepository
 from infrastructure.db.repositories.user_repository import UserRepository
 from infrastructure.tasks.task import active_users_get_delete,top_wiki_in_a_day
+from django.db.models.manager import BaseManager
+from django.db.models import Count
 
 import pandas as pd
 import numpy as np
@@ -72,7 +74,7 @@ class Admin_class_func:
     def delete_user(self,user:User,id:int):
         super_user_repo = SuperUserRepository(user)
         user_repo = UserRepository()
-        if super_user_repo.user_is_superuser(user):
+        if not super_user_repo.user_is_superuser():
             return self.RESULT({"err":"Вам не доступна эта команда"},True)
         if not user_repo.user_exists(id=id):
             return self.RESULT("пользователь с таким айди не найден",True)
@@ -91,3 +93,11 @@ class Admin_class_func:
             return self.RESULT("Вам запрещено текущая команда",True)
         active_users_get_delete.delay()
         return self.RESULT("Ваш запрос принят")
+    def wiki_analys_users(self,user:User):
+        super_user_repo = SuperUserRepository(user)
+        if not super_user_repo.user_is_superuser():
+            return self.RESULT(False,True)
+        users:BaseManager[User] = super_user_repo.get_users()
+        wiki_count = users.annotate(wiki_count=Count("my_wiki")).order_by("-wiki_count").values("username","id","wiki_count")
+        return wiki_count        
+    

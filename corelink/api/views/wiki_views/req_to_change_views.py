@@ -24,6 +24,10 @@ class Accept_for_req_changes(APIView):
         return Response(res)
     def get(self,request:Request,req_id:int):
         res = Req_To_Change_Repo(request.user).get_request(req_id)
+        if not res:
+            res = Req_To_Change_Repo(request.user).get_my_request(req_id)
+            if not res:
+                return Response({"err":"Вы не можете увидить этот запрос!!!"})
         return Response(Reques_to_change_serializer(res).data)
     def delete(self,request:Request,req_id:int):
         res = WikiChange_Controller(request.user).delete_request_change(req_id)

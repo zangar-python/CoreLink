@@ -55,7 +55,7 @@ class UserAuth_Log:
             "user":UserSerializer(user).data,
             "token_key":token.key
         })
-    def get_user_by(self,id:Union[int,None],username:Union[str,None]=None,email:Union[str,None]=None):
+    def get_user_by(self,id:Union[int,None]=None,username:Union[str,None]=None,email:Union[str,None]=None):
         user_repos = UserRepository()
         user_exists = user_repos.user_exists(id=id,username=username,email=email)
         if not user_exists:

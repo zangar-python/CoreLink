@@ -13,7 +13,7 @@ class UserRegisterViews(APIView):
         password = request.data.get("password")
         
         if not username or not email or not password:
-            return {"err":"Введите данные имя пользователья,емайл,пароль"}
+            return Response({"err":"Введите данные имя пользователья,емайл,пароль"})
         return Response(UserAuth_Log().user_register(username,password,email))
 class UserLoginViews(APIView):
     permission_classes = [AllowAny]

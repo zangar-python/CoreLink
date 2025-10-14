@@ -22,8 +22,6 @@ class SuperUserRepository:
             return None
         users = User.objects.select_related("activity")
         return users
-        
-        return users
     def delete_user(self,user:User):
         if not self.user.is_superuser:
             return False
