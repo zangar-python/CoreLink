@@ -3,13 +3,14 @@ from .views.admin_views import Get_users_list,Delete_all_active,Delete_user,Top_
 from .views.wiki_views.crud_views import Wiki_CRUD_Views,Wiki_Detail_CRUD_View
 from .views.wiki_views.recomendations_views import Wiki_Top
 
-from .views.wiki_views.crud_views import Req_to_change_set_views,Accept_for_req_changes,get_all_req_changes
+from .views.wiki_views.req_to_change_views import Req_to_change_set_views,Accept_for_req_changes,get_all_my_req_changes,get_all_req_changes
 
 from django.urls import path,include
 
 req_change_urls = [
     path("<int:req_id>/",Accept_for_req_changes.as_view()),
-    path("",get_all_req_changes.as_view())
+    path("",get_all_req_changes.as_view()),
+    path("my/",get_all_my_req_changes.as_view())
 ]
 
 user_views_urls = [

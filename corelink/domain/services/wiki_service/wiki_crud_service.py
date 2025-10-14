@@ -59,7 +59,8 @@ class WikiService(UserAuth_Log):
             }
             result_wiki.append(wiki_data)
         return result_wiki
-        
+    
+    
     def update_wiki(self,id,title:Union[str,None]=None,text:Union[str,None]=None):
         if title and len(title) > 200:
             return self.RESULT("title length > 200!",True)
