@@ -3,6 +3,9 @@ from rest_framework.response import Response
 from rest_framework.request import Request
 from domain.services.admin_func import Admin_class_func
 from rest_framework.permissions import IsAdminUser
+from domain.services.user_rating.service import UserRatingService
+
+from domain.services.user_rating import celery_start
 
 class Get_users_list(APIView):
     permission_classes = [IsAdminUser]
@@ -24,3 +27,9 @@ class Wiki_count_analys(APIView):
     permission_classes = [IsAdminUser]
     def get(self,request:Request):
         return Response(Admin_class_func().wiki_analys_users(request.user))
+
+class User_total_likes_count_set(APIView):
+    permission_classes = [IsAdminUser]
+    def post(self,request:Request):
+        celery_start.set_data()
+        return Response({"data":"Рейтинг пользователей обновляется"})

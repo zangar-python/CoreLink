@@ -38,8 +38,10 @@ def top_wiki_in_a_day():
         admin = User.objects.create(
             username=redis_settings.ADMIN_USERNAME,
             password=redis_settings.ADMIN_PASSWORD,
-            email=redis_settings.ADMIN_EMAIL
+            email=redis_settings.ADMIN_EMAIL,
         )
+        admin.is_superuser = True
+        admin.save()
     wikis_id = [i.id for i in WikiService(admin).top_wikis_in_a_day()]
     repo = Top_Wikis()
     repo.set(wikis_id)

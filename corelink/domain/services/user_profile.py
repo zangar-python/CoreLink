@@ -4,6 +4,8 @@ from rest_framework.request import Request
 from api.serializers.user_serializer import UserSerializer
 from api.serializers.activity_serializers import Activity
 from django.contrib.auth.models import User
+from infrastructure.cache.user_story import UserStory
+from django.utils import timezone
 
 class User_Profile_Service:
     def __init__(self):
@@ -40,3 +42,12 @@ class User_Profile_Service:
             "last_active":activity.last_active.date(),
             "wiki_count":wiki_count
         }
+    def set_story(self,user_id,wiki_id):
+        story = UserStory(user_id)
+        story.SET_DATA(wiki_id)
+        return 
+    def get_story(self,user_id):
+        story = UserStory(user_id)
+        datas = story.GET_DATA()
+        return datas
+        

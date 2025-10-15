@@ -29,4 +29,8 @@ class UserProfile(APIView):
         return Response(profile_service.set_user_data(request))
     def get(self,request:Request):
         return Response(User_Profile_Service().get_user_profile(request.user))
-       
+
+class UserStoryViews(APIView):
+    def get(self,request:Request):
+        story = User_Profile_Service().get_story(request.user.id)
+        return Response(story)

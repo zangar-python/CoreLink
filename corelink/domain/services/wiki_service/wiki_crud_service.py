@@ -5,6 +5,7 @@ from infrastructure.db.repositories.super_user_repo import SuperUserRepository
 from django.db.models import Count
 from infrastructure.tasks.task import Top_Wikis
 
+
 from typing import Union
 
 class WikiService(UserAuth_Log):
@@ -59,7 +60,20 @@ class WikiService(UserAuth_Log):
             }
             result_wiki.append(wiki_data)
         return result_wiki
-    
+    def wiki_like_set(self,wiki):
+        wiki.likes.add(self.user)
+        return self.RESULT("wiki like added")
+    def wiki_like_delete(self,wiki):
+        
+        wiki.likes.remove(self.user)
+        return self.RESULT("Like is removed")
+    def wiki_set_or_del(self,wiki_id):
+        wiki = self.wiki_repo.get_wiki(wiki_id)
+        if not wiki:
+            return self.RESULT("wiki is not exists")
+        if wiki.likes.filter(id=self.user.id).exists():
+            return self.wiki_like_delete(wiki)
+        return self.wiki_like_set(wiki)
     
     def update_wiki(self,id,title:Union[str,None]=None,text:Union[str,None]=None):
         if title and len(title) > 200:
