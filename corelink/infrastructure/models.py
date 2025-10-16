@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+# from django.contrib.auth.models import AbstractUser
 
 class Activity(models.Model):
     active = models.IntegerField(default=0)
@@ -32,3 +33,9 @@ class Request_To_Change_Wiki(models.Model):
     wiki = models.ForeignKey(Wiki,on_delete=models.CASCADE,related_name="requests_to_change")
     from_user = models.ForeignKey(User,on_delete=models.CASCADE,related_name="my_requests_to_change")
     to_author = models.ForeignKey(User,models.CASCADE,related_name="requests_to_change")
+
+# class CustomUser(AbstractUser):
+    
+#     bio = models.CharField(max_length=400)
+#     def __str__(self):
+#         return self.username

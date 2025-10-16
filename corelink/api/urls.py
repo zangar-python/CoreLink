@@ -16,7 +16,8 @@ req_change_urls = [
 user_views_urls = [
     path("register/",UserRegisterViews.as_view(),name="user-register"),
     path("login/",UserLoginViews.as_view(),name="user-login"),
-    path("",UserProfile.as_view(),name="User-profile")
+    path("",UserProfile.as_view(),name="User-profile"),
+    path("story/",UserStoryViews.as_view(), name="story"),
 ]
 admin_views_urls = [
     path("users/",Get_users_list.as_view(),name="users-list"),
@@ -39,7 +40,6 @@ from .views.analytics.urls import analytic_urls
 
 api_urls = [
     path("",include(user_views_urls)),
-    path("story/",UserStoryViews.as_view(), name="story"),
     path("admin/",include(admin_views_urls)),
     path("wiki/",include(wiki_views_urls)),
     path("change/",include(req_change_urls)),

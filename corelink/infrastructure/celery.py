@@ -11,8 +11,8 @@ celery_app = celery.Celery(
     broker=f"redis://{HOST}:{PORT}/{DB}",
 )
 
-# celery_app.autodiscover_tasks(['infrastructure.tasks'])
-celery_app.conf.beat_schedules = {
+celery_app.autodiscover_tasks(['infrastructure.tasks'])
+celery_app.conf.beat_schedule = {
     "top-every-day":{
         "task":"infrastructure.tasks.task.top_wiki_in_a_day",
         "schedule":crontab(hour=0,minute=0)
@@ -27,12 +27,12 @@ celery_app.conf.beat_schedules = {
     },
     "clear-requests-change-every-week":{
         "task":"infrastructure.tasks.beat_clear_request.clear_requests",
-        "schedule":crontab(hour=0,minute=0)
+        "schedule":crontab(hour=0,minute=0,day_of_week=1)
     },
     
 }
 
-from .tasks.beat_clear_request import clear_requests
-from .tasks.beat_users_top_by_likes import set_top_users_by_likes
-from .tasks.task import create_wiki,active_users_get_delete,top_wiki_in_a_day
-from .tasks.req_to_change_async import set_request_to_change,delete_request_change,accept_request_to_change
+# from .tasks.beat_clear_request import clear_requests
+# from .tasks.beat_users_top_by_likes import set_top_users_by_likes
+# from .tasks.task import create_wiki,active_users_get_delete,top_wiki_in_a_day
+# from .tasks.req_to_change_async import set_request_to_change,delete_request_change,accept_request_to_change

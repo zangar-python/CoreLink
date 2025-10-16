@@ -4,7 +4,7 @@ from api.serializers.wiki_serializer import WikiSerializer
 from infrastructure.db.repositories.super_user_repo import SuperUserRepository
 from django.db.models import Count
 from infrastructure.tasks.task import Top_Wikis
-
+from infrastructure.db.repositories.activity_repo import ActivityRepository
 
 from typing import Union
 
@@ -61,10 +61,14 @@ class WikiService(UserAuth_Log):
             result_wiki.append(wiki_data)
         return result_wiki
     def wiki_like_set(self,wiki):
+        user_activty_repo = ActivityRepository(self.user)
+        author_activity_repo = ActivityRepository(wiki.author)
         wiki.likes.add(self.user)
+        user_activty_repo.update(5)
+        author_activity_repo.update(5)
+        
         return self.RESULT("wiki like added")
     def wiki_like_delete(self,wiki):
-        
         wiki.likes.remove(self.user)
         return self.RESULT("Like is removed")
     def wiki_set_or_del(self,wiki_id):
