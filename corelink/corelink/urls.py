@@ -17,8 +17,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path,include
 from api.urls import api_urls
+from analitical_service.urls import analitic_urls
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/',include(api_urls))
+    path('api/',include(api_urls)),
+    path("a/",include(analitic_urls))
 ]

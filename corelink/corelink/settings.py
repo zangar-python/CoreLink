@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework.authtoken',
     'api',
-    'infrastructure'
+    'infrastructure',
+    'analitical_service'
 ]
 
 REST_FRAMEWORK = {
