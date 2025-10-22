@@ -11,7 +11,7 @@ celery_app = celery.Celery(
     broker=f"redis://{HOST}:{PORT}/{DB}",
 )
 
-celery_app.autodiscover_tasks(['infrastructure.tasks'])
+celery_app.autodiscover_tasks(['infrastructure.tasks','analitical_service'])
 celery_app.conf.beat_schedule = {
     "top-every-day":{
         "task":"infrastructure.tasks.task.top_wiki_in_a_day",
