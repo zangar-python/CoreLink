@@ -9,10 +9,11 @@ class Wiki_CRUD_Views(APIView):
     def post(self,request:Request):
         title = request.data.get("title")
         text = request.data.get("text")
+        tags = request.data.get("tags")
         
         if not text or not title:
             return Response("Пополните поля {text,title}",status=401) 
-        return Response(start_celery_worker_CREATE_WIKI(request.user,title,text))
+        return Response(start_celery_worker_CREATE_WIKI(request.user,title,text,tags))
     def get(self,request:Request):
         res = WikiService(request.user).get_all_wiki()
         return Response(res)

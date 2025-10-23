@@ -5,6 +5,9 @@ from infrastructure.db.repositories.super_user_repo import SuperUserRepository
 from django.db.models import Count
 from infrastructure.tasks.task import Top_Wikis
 from infrastructure.db.repositories.activity_repo import ActivityRepository
+from analitical_service.tasks import update_cash_from_redis
+
+from tag_service.services.service_tag import Tag_Service
 
 from typing import Union
 
@@ -16,14 +19,17 @@ class WikiService(UserAuth_Log):
         self.super_user_repo = SuperUserRepository(self.user)
         pass
     
-    def set_wiki(self,title:str,text:str):
+    def set_wiki(self,title:str,text:str,tags):
         if len(title) > 200:
             return self.RESULT("title's length > 200",True)
         
         wiki = self.wiki_repo.create_wiki(title=title,text=text)
+        data = {}
+        data['res'] = Tag_Service().set_tags_list(wiki,tags)
         return self.RESULT({
             "wiki":self.serializer(wiki).data,
-            "created":True
+            "created":True,
+            "data":data
         })
     def get_wiki(self,id):
         wiki_author = self.wiki_repo.get_wiki_with_author(id=id)
@@ -64,12 +70,14 @@ class WikiService(UserAuth_Log):
         user_activty_repo = ActivityRepository(self.user)
         author_activity_repo = ActivityRepository(wiki.author)
         wiki.likes.add(self.user)
+        update_cash_from_redis.delay([i.pk for i in wiki.likes.all()])
         user_activty_repo.update(5)
         author_activity_repo.update(5)
         
         return self.RESULT("wiki like added")
     def wiki_like_delete(self,wiki):
         wiki.likes.remove(self.user)
+        update_cash_from_redis.delay([i.pk for i in wiki.likes.all()])
         return self.RESULT("Like is removed")
     def wiki_set_or_del(self,wiki_id):
         wiki = self.wiki_repo.get_wiki(wiki_id)

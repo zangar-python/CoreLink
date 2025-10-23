@@ -9,7 +9,7 @@ class Activity(models.Model):
     redacting = models.BooleanField(default=True)
     
     def __str__(self):
-        return f"User : {self.user.username} activity : {self.activity}"
+        return f"User : {self.user.username} activity : {self.active}"
 
 class Wiki(models.Model):
     title = models.CharField(max_length=200)

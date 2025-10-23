@@ -12,7 +12,10 @@ class Cash_To_redis:
         self.data = f"user:{user.id}:{data}"
         pass
     def to_cash(self,wiki_ids):
+        if not wiki_ids:
+            return False
         r.delete(self.data)
+        print(type(wiki_ids),wiki_ids)
         r.lpush(self.data,*wiki_ids)
         r.expire(self.data,(60*60*1))
         return True
@@ -34,7 +37,7 @@ class Recom_Wiki:
         our_users = User.objects.filter(
             likes__id__in=user_likes
         ).exclude(
-            id-self.user.id,
+            id=self.user.id,
         ).values_list(
             "id",flat=True
         )
@@ -42,10 +45,8 @@ class Recom_Wiki:
             likes__id__in=our_users
         ).exclude(
             id__in=user_likes
-        ).distinct().values_list(
-            "id"
-        )[:100]
-        self.cash.to_cash(wikis)
+        ).distinct()[:100]
+        self.cash.to_cash([i.pk for i in wikis])
         return
         
     def get_our_like(self):

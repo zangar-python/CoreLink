@@ -5,6 +5,6 @@ from infrastructure.models import Wiki
 from .tasks import update_cash_from_redis
 
 @receiver(post_migrate,sender=Wiki)
-def update_recom_cash(sender,instance:Wiki,*kwargs):
-    liked_users = instance.likes.all().values_list("id",flat=True)
-    update_cash_from_redis.delay(liked_users)
+def update_recom_cash(sender,instance:Wiki,**kwargs):
+    liked_users_id = [i.pk for i in instance.likes.all()]
+    update_cash_from_redis.delay(liked_users_id)

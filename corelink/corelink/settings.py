@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'api',
     'infrastructure',
-    'analitical_service.apps.AnaliticalServiceConfig'
+    'analitical_service.apps.AnaliticalServiceConfig',
+    'tag_service'
 ]
 
 REST_FRAMEWORK = {
