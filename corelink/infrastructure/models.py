@@ -19,13 +19,6 @@ class Wiki(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-class Message(models.Model):
-    from_user = models.ForeignKey(User,models.CASCADE,related_name="my_messages")
-    to_user = models.ForeignKey(User,models.CASCADE,related_name="messages")
-    text = models.TextField(null=True,blank=True)
-    title = models.CharField(max_length=120)
-    created_at = models.DateTimeField(auto_now_add=True)
-
 class Request_To_Change_Wiki(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     title = models.CharField(max_length=200)
