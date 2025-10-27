@@ -21,7 +21,7 @@ celery_app.conf.beat_schedule = {
         "task":"infrastructure.tasks.task.active_users_get_delete",
         "schedule":crontab(hour=0,minute=0)
     },
-    "top-users-every-day":{
+    "top-users-every-hour":{
         "task":"infrastructure.tasks.beat_users_top_by_likes.set_top_users_by_likes",
         "schedule":crontab(hour="*",minute=0)
     },

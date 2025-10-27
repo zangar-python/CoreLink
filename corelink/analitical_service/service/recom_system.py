@@ -21,6 +21,9 @@ class Cash_To_redis:
         r.lpush(self.data,*wiki_ids)
         r.expire(self.data,(60*60*1))
         return True
+    def clear(self):
+        r.delete(self.data)
+        return
     def get_from_cash(self):
         res =  [ i.decode() for i in r.lrange(self.data,0,-1)]
         return res
@@ -127,3 +130,15 @@ class Recom_By_Tag:
     def SET(self):
         wikis = self.get_recomend()
         return self.set_to_cash(wikis)
+    
+
+class clear_cash:
+    def __init__(self,user:User):
+        self.user = user
+        self.tag_service = Recom_By_Tag(user)
+        self.likes_service = Recom_Wiki(user)
+        pass
+    def CLEAR(self):
+        self.tag_service.cash.clear()
+        self.likes_service.cash.clear()
+        return True

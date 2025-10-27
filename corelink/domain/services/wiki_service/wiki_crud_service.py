@@ -6,6 +6,7 @@ from django.db.models import Count
 from infrastructure.tasks.task import Top_Wikis
 from infrastructure.db.repositories.activity_repo import ActivityRepository
 from analitical_service.tasks import update_cash_from_redis
+from analitical_service.service.recom_system import clear_cash
 
 from tag_service.services.service_tag import Tag_Service
 
@@ -83,6 +84,8 @@ class WikiService(UserAuth_Log):
         wiki = self.wiki_repo.get_wiki(wiki_id)
         if not wiki:
             return self.RESULT("wiki is not exists")
+        
+        clear_cash(self.user).CLEAR()
         if wiki.likes.filter(id=self.user.id).exists():
             return self.wiki_like_delete(wiki)
         return self.wiki_like_set(wiki)
