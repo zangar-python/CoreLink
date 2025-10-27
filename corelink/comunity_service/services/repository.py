@@ -55,6 +55,8 @@ class ComunityRepository(Comunity_base_Repository):
     def put_comunity(self,name:Union[str,None]=None,description:Union[str,None]=None):
         if not self.is_admin:
             return False
+        if self.comunity_with_name_exists(name):
+            return False
         if name:
             self.comunity.name = name
         if description:
@@ -81,7 +83,7 @@ class Message_Repository(ComunityRepository):
         return message
     def get_messages(self) -> BaseManager[Message]:
         return self.comunity.messages.all().order_by("-created_at")
-    def get_message(self,pk) -> Message:
+    def get_message(self,pk) -> Message | False:
         if not self.comunity.messages.filter(pk=pk).exists():
             return False
         return self.comunity.messages.get(pk=pk)
