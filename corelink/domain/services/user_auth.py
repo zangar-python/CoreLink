@@ -1,7 +1,7 @@
 from infrastructure.db.repositories.user_repository import UserRepository
 from infrastructure.db.repositories.token_repository import TokenRepository
-from api.serializers.user_serializer import UserSerializer,User
-from infrastructure.db.repositories.super_user_repo import SuperUserRepository
+from api.serializers.user_serializer import UserSerializer
+
 
 from typing import Union
 

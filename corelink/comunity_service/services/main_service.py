@@ -1,11 +1,12 @@
 from .repository import Message_Repository,ComunityRepository,Comunity_base_Repository
 from .repository import Message,Comunity
 from infrastructure.db.repositories.user_repository import UserRepository
+from infrastructure.db.repositories.activity_repo import ActivityRepository
 
 from api.serializers.comunity_serializers import MessageSerializer,ComunitySerializer
 
+
 from rest_framework.request import Request
-from typing import Union
 
 class ComunityService:
     def __init__(self,request:Request):
@@ -23,6 +24,7 @@ class ComunityService:
         res = self.base_repo.create_comunity(name,description)
         if not res:
             return False
+        ActivityRepository(self.request.user).update(10)
         return ComunitySerializer(res).data
     
     def get_comunity(self,pk):
@@ -48,6 +50,7 @@ class ComunityService:
         res = repo.put_comunity(name,description)
         if not res:
             return False
+        ActivityRepository(self.request.user).update(5)
         return ComunitySerializer(res).data
 
 class ComunityUserService:
@@ -67,6 +70,7 @@ class ComunityUserService:
         res = self.comunity_repo.add_user()
         if not res:
             return False
+        ActivityRepository(self.user).update(5)
         return ComunitySerializer(res).data
     
     def remove_user(self):
@@ -99,6 +103,7 @@ class MessageService:
         res = self.msg_repo.add_message(text)
         if not res:
             return False
+        ActivityRepository(self.request.user).update(1)
         return MessageSerializer(res).data
     
     def get_messages(self):
@@ -114,6 +119,7 @@ class MessageService:
         res = self.msg_repo.put_message(message,text)
         if not res:
             return res
+        ActivityRepository(self.request.user).update(1)
         return MessageSerializer(res).data
     def get_message(self,pk):
         res = self.msg_repo.get_message(pk)
