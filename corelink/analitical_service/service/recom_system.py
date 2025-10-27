@@ -1,5 +1,7 @@
 from infrastructure.models import Wiki,User
 from django.db.models import Count
+from django.db.models.manager import BaseManager
+# from tag_service.services.repo_tag import Tag_Wiki_Repo
 import redis
 
 from typing import Union
@@ -93,3 +95,35 @@ class Recom_Wiki:
             "id","likes_count","title","text","author","created_at","updated_at"
         )
         return wikis
+class Recom_By_Tag:
+    def __init__(self,user:User):
+        self.user = user
+        self.cash = Cash_To_redis(user,data="by_tag")
+        pass
+    
+    def get_recomend(self):
+        user_liked_wikis : BaseManager = self.user.likes.all()
+        tags_id = user_liked_wikis.values_list("tags__id",flat=True)
+        wikis_with_this_tags = Wiki.objects.filter(
+            tags__id__in=tags_id
+        ).distinct().order_by("-created_at")[:100]
+        return wikis_with_this_tags
+    
+    def get_from_cash(self):
+        return self.cash.get_from_cash()
+    def set_to_cash(self,wikis:BaseManager[Wiki]):
+        rec_ids = [i.id for i in wikis]
+        return self.cash.to_cash(rec_ids)
+    
+    def GET(self):
+        ids = self.get_from_cash()
+        if len(ids) == 0:
+            wikis = self.get_recomend()
+            self.set_to_cash(wikis)
+            return wikis
+        else:
+            wikis = Wiki.objects.filter(id__in=ids).order_by("-created_at")[:100]
+            return wikis
+    def SET(self):
+        wikis = self.get_recomend()
+        return self.set_to_cash(wikis)

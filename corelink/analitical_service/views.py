@@ -1,7 +1,8 @@
 from rest_framework.views import APIView
 from .service import classic_numpy
-from .service.recom_system import Recom_Wiki
+from .service.recom_system import Recom_Wiki,Recom_By_Tag
 from rest_framework.response import Response
+from api.serializers.wiki_serializer import WikiSerializer
 
 class classic_analytics_views(APIView):
     def post(self,request):
@@ -19,3 +20,7 @@ class user_recom_likes_views(APIView):
 class user_recomend_V2_ORM_views(APIView):
     def get(self,request):
         return Response(Recom_Wiki(request.user).get_our_like())
+class user_recom_by_tag(APIView):
+    def get(self,request):
+        wikis = Recom_By_Tag(request.user).GET()
+        return Response(data=WikiSerializer(wikis,many=True).data)
