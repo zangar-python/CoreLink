@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'api',
     'infrastructure',
     'analitical_service.apps.AnaliticalServiceConfig',
-    'tag_service'
+    'tag_service',
+    'comunity_service'
 ]
 
 REST_FRAMEWORK = {

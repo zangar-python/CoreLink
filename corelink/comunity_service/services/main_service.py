@@ -33,6 +33,9 @@ class ComunityService:
             return False
         return ComunitySerializer(res).data
     
+    def get_comunitys(self):
+        return ComunitySerializer(self.base_repo.get_comunitys(),many=True).data
+    
     def delete_comunity(self,pk):
         return self.base_repo.delete_comunity(pk)
     
@@ -109,7 +112,7 @@ class MessageService:
     def get_messages(self):
         return MessageSerializer(self.msg_repo.get_messages(),many=True).data
     
-    def put_message(self,pk_message,text):
+    def put_message(self,pk_message):
         message = self.msg_repo.get_message(pk_message)
         if not message:
             return False

@@ -37,6 +37,7 @@ wiki_views_urls = [
 
 from .views.analytics.urls import analytic_urls
 from tag_service.urls import tag_service_urls
+from comunity_service.urls import community_urls
 
 api_urls = [
     path("",include(user_views_urls)),
@@ -44,5 +45,6 @@ api_urls = [
     path("wiki/",include(wiki_views_urls)),
     path("change/",include(req_change_urls)),
     path("analytics/",include(analytic_urls)),
-    path("tag/",include(tag_service_urls))
+    path("tag/",include(tag_service_urls)),
+    path("community/",include(community_urls))
 ]

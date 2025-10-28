@@ -1,6 +1,7 @@
 from ..models import Comunity,Message,User
 from django.db.models.manager import BaseManager
 from typing import Union
+from .ban_service import set_ban_user
 
 class Comunity_base_Repository:
     def __init__(self,user:User):
@@ -32,26 +33,33 @@ class Comunity_base_Repository:
         if not Comunity.objects.filter(pk=pk):
             return False
         return Comunity.objects.get(pk=pk)
+    def get_comunitys(self):
+        return Comunity.objects.all()
 
 class ComunityRepository(Comunity_base_Repository):
     def __init__(self,user:User,comunity:Comunity):
         super().__init__(user)
         self.comunity = comunity
-        self.is_admin = comunity.admin == user
+        self.is_admin = comunity.admin.pk == user.pk
         pass
     def add_user(self):
         if self.is_admin:
             return False
+        if set_ban_user().is_user_baned_on(self.user.pk,self.comunity.pk):
+            return False
         self.comunity.users.add(self.user)
         return self.comunity
     def remove_user(self):
-        self.comunity.users.delete(self.user)
+        self.comunity.users.remove(self.user)
         return self.comunity
     def ban_user(self,user_to_ban:User):
         if not self.is_admin:
             return False
-        self.comunity.users.remove(user_to_ban)
-        return True
+        if self.comunity.users.filter(pk=user_to_ban.pk).exists():
+            self.comunity.users.remove(user_to_ban)
+            set_ban_user().set_ban_to_user(user_to_ban.pk,self.comunity.pk)
+            return True
+        return False
     def put_comunity(self,name:Union[str,None]=None,description:Union[str,None]=None):
         if not self.is_admin:
             return False
@@ -83,7 +91,7 @@ class Message_Repository(ComunityRepository):
         return message
     def get_messages(self) -> BaseManager[Message]:
         return self.comunity.messages.all().order_by("-created_at")
-    def get_message(self,pk) -> Message | False:
+    def get_message(self,pk):
         if not self.comunity.messages.filter(pk=pk).exists():
             return False
         return self.comunity.messages.get(pk=pk)
